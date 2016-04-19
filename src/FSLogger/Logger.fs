@@ -19,8 +19,6 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
-
-
 module FSLogger
 
 open System
@@ -33,6 +31,7 @@ type LogLevel =
     | Error = 3
     | Fatal = 4
 
+/// Immutable struct holding information relating to a log entry.
 [<Struct>]
 type LogEntry(level : LogLevel, time : DateTime, path : string, message : string) = 
     
@@ -48,8 +47,9 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
     /// The actual log message
     member __.Message = message
     
-    override __.ToString() = sprintf "[%A|%A]%s:%s" DateTime.Now level path message
+    override __.ToString() = sprintf "[%A|%A]%s :%s" DateTime.Now level path message
 
+/// Immmutable logger, which holds information about the logging context.
 [<Struct>]
 type Logger internal (path : string, consumer : LogEntry -> unit) = 
     
@@ -83,6 +83,9 @@ module Logger =
     /// Creates a new logger with the provided path
     let withPath newPath (logger : Logger) = Logger(newPath, logger.Consumer)
     
+    /// Creates a new logger with the provided path appended. This is useful for heirarchical logger pathing.
+    let appendPath newPath (logger : Logger) = Logger(Path.Combine(logger.Path, newPath), logger.Consumer)
+    
     /// Logs a message to the logger at the provided level.
     let inline logf level (logger : Logger) format = logger.Logf level format
     
@@ -95,7 +98,7 @@ module Logger =
             newConsumer l
         logger |> withConsumer consume
     
-    /// Decorates a Logger with a 
+    /// Creates a new logger with a mapping function over the log entries.
     let decorate f (logger : Logger) = Logger(logger.Path, f >> logger.Consumer)
     
     /// Creates a new logger that indents all messages in the logger by 4 spaces.
