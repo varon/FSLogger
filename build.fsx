@@ -64,6 +64,14 @@ let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/Varon/FSLogger
 // Read additional information from the release notes document
 let release = LoadReleaseNotes "RELEASE_NOTES.md"
 
+// helper to append the CI build number to versions, for smoother automatic NuGet upgrading
+let appendBuildNumber baseVersion = 
+    let bn =  Environment.GetEnvironmentVariable "BUILD_NUMBER"
+    if String.IsNullOrEmpty bn then
+        baseVersion
+    else
+        sprintf "%A.%s" baseVersion bn
+
 // Helper active pattern for project types
 let (|Fsproj|Csproj|Vbproj|) (projFileName:string) = 
     match projFileName with
@@ -78,8 +86,8 @@ Target "AssemblyInfo" (fun _ ->
         [ Attribute.Title (projectName)
           Attribute.Product project
           Attribute.Description summary
-          Attribute.Version release.AssemblyVersion
-          Attribute.FileVersion release.AssemblyVersion ]
+          Attribute.Version (appendBuildNumber release.AssemblyVersion)
+          Attribute.FileVersion (appendBuildNumber release.AssemblyVersion) ]
 
     let getProjectDetails projectPath =
         let projectName = System.IO.Path.GetFileNameWithoutExtension(projectPath)
@@ -143,7 +151,7 @@ Target "NuGet" (fun _ ->
     Paket.Pack(fun p -> 
         { p with
             OutputPath = "bin"
-            Version = release.NugetVersion
+            Version = (appendBuildNumber release.NugetVersion)
             ReleaseNotes = toLines release.Notes})
 )
 
