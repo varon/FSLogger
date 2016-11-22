@@ -165,6 +165,7 @@ Target "Publish" (fun _ ->
     if TeamCityVersion.IsSome then
         Paket.Push( fun p -> 
             { p with 
+                PublishUrl = "https://www.nuget.org"
                 WorkingDir = "bin"
             })
     else
