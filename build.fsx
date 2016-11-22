@@ -147,16 +147,15 @@ Target "RunTests" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
 
-Target "NuGet" (fun _ ->
-    Paket.Pack(fun p -> 
-        { p with
-            OutputPath = "bin"
-            Version = (appendBuildNumber release.NugetVersion)
-            ReleaseNotes = toLines release.Notes})
+Target "Publish" (fun _ ->
+    if TeamCityVersion.IsSome then
+        Paket.Push( fun p -> 
+            { p with 
+                WorkingDir = "bin"
+            })
+    else
+        failwithf "Failed to publish package. This may only be done from the CI server."
 )
-
-
-Target "BuildPackage" DoNothing
 
 // --------------------------------------------------------------------------------------
 // Run all targets by default. Invoke 'build <Target>' to override
@@ -173,5 +172,7 @@ Target "All" DoNothing
 "All" 
   ==> "NuGet"
 
+"Nuget"
+  ==> "Publish"
 
 RunTargetOrDefault "All"
