@@ -147,6 +147,20 @@ Target "RunTests" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
 
+
+Target "NuGet" (fun _ ->
+    Paket.Pack(fun p -> 
+        { p with
+            OutputPath = "bin"
+            Version = (appendBuildNumber release.NugetVersion)
+            ReleaseNotes = toLines release.Notes})
+)
+
+
+// --------------------------------------------------------------------------------------
+// Publish to NuGet.org gallery
+
+
 Target "Publish" (fun _ ->
     if TeamCityVersion.IsSome then
         Paket.Push( fun p -> 
