@@ -1,10 +1,10 @@
 source https://nuget.org/api/v2
 
+nuget FSharp.Core
 nuget FSharp.Formatting
 nuget FAKE
 nuget FsCheck
 nuget FsCheck.Xunit
-nuget Fsharp.Core
 nuget xunit.core
 nuget xunit.abstractions
 nuget xunit.extensibility.core
