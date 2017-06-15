@@ -1,3 +1,7 @@
+### 1.3
+* Added shorthand calls for log levels.
+* Adjusted default PrintFn logger to print to std::err for warn, error and fatal levels.
+
 ### 1.2
 * Moved to .Net 4.5.2
 * Upgraded to Fsharp 4.1
