@@ -67,6 +67,21 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     /// Logs the message at the specified level
     member x.Logf level format = Printf.ksprintf (x.Log level) format
     
+    /// Logs the message at the debug level
+    member x.D format = Printf.ksprintf (x.Log LogLevel.Debug) format
+    
+    /// Logs the message at the info level
+    member x.I format = Printf.ksprintf (x.Log LogLevel.Info) format
+    
+    /// Logs the message at the warning level
+    member x.W format = Printf.ksprintf (x.Log LogLevel.Warn) format
+    
+    /// Logs the message at the error level
+    member x.E format = Printf.ksprintf (x.Log LogLevel.Error) format
+    
+    /// Logs the message at the fatal level
+    member x.F format = Printf.ksprintf (x.Log LogLevel.Fatal) format
+    
     override __.ToString() = sprintf "Logger: {path = '%s'; consumers = %A}" path consumer
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
@@ -74,8 +89,14 @@ module Logger =
     /// The default logger. Has no path and does nothing on consumption.
     let Default = Logger("", ignore)
     
-    /// A logger that prints to std::out
-    let Printfn = Logger("", printfn "%A")
+    /// A logger that prints to std::out / std::err based on the context
+    let Printfn = 
+        let print (le:LogEntry) = 
+            match le.Level with
+            | LogLevel.Debug | LogLevel.Info -> printfn "%A" le
+            | _ -> eprintfn "%A" le
+        
+        Logger("", print)
     
     /// Creates a new logger with the provided consumer
     let withConsumer newConsumer (logger : Logger) = Logger(logger.Path, newConsumer)
