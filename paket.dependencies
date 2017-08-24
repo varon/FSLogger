@@ -1,7 +1,7 @@
 source https://nuget.org/api/v2
+framework: auto-detect
 
 nuget FSharp.Core
-nuget FSharp.Formatting
 nuget FAKE
 nuget FsCheck
 nuget FsCheck.Xunit
