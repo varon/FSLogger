@@ -23,6 +23,7 @@ module FSLogger
 
 open System
 open System.IO
+open System.Text
 
 type LogLevel = 
     | Debug = 0
@@ -34,6 +35,8 @@ type LogLevel =
 /// Immutable struct holding information relating to a log entry.
 [<Struct>]
 type LogEntry(level : LogLevel, time : DateTime, path : string, message : string) = 
+
+    static let separators = [| '\\'; '/' |]
     
     /// The log level of the message
     member __.Level = level
@@ -47,7 +50,18 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
     /// The actual log message
     member __.Message = message
     
-    override __.ToString() = sprintf "[%A|%A]%s :%s" DateTime.Now level path message
+    override __.ToString() = sprintf "[%A|%A]%s :%s" time level path message
+
+    member __.ShortString = 
+        let sb = new StringBuilder(path.Length)
+        let idx = path.LastIndexOfAny(separators,0, path.Length - 1)
+        sb.Append('[')
+          .Append(time.ToShortTimeString())
+          .Append(']')
+          .Append(path, idx + 1, (path.Length - idx))
+          .Append(": ")
+          .AppendLine(message)
+          .ToString()
 
 /// Immmutable logger, which holds information about the logging context.
 [<Struct>]
@@ -82,30 +96,74 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     /// Logs the message at the fatal level
     member x.F format = Printf.ksprintf (x.Log LogLevel.Fatal) format
     
-    override __.ToString() = sprintf "Logger: {path = '%s'; consumers = %A}" path consumer
+    override __.ToString() = sprintf "Logger: {path = '%s'; consumer = %A}" path consumer
 
-[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Logger = 
     /// The default logger. Has no path and does nothing on consumption.
     let Default = Logger("", ignore)
     
     /// A logger that prints to std::out / std::err based on the context
-    let Printfn = 
+    let Console = 
         let print (le:LogEntry) = 
             match le.Level with
             | LogLevel.Debug | LogLevel.Info -> printfn "%A" le
             | _ -> eprintfn "%A" le
         
         Logger("", print)
+
+    /// A logger that prints to std::out / std::err based on the context, using a short form
+    let ConsoleShort = 
+        let print (le:LogEntry) = 
+            match le.Level with
+            | LogLevel.Debug | LogLevel.Info -> System.Console.WriteLine(le)
+            | _ -> System.Console.Error.WriteLine(le.ShortString)
+        
+        Logger("", print)
+
+    let private levelToCol l =
+        match l with
+        | LogLevel.Debug -> ConsoleColor.Gray
+        | LogLevel.Info -> ConsoleColor.White
+        | LogLevel.Warn -> ConsoleColor.Yellow
+        | LogLevel.Error -> ConsoleColor.Red
+        | _ -> ConsoleColor.Magenta
+
+    /// A logger that prints to std::out / std::err based on the context, with extra colourization
+    let ColorConsole =
+        let print (le:LogEntry) =
+            System.Console.ResetColor()
+            System.Console.ForegroundColor <- levelToCol le.Level
+            match le.Level with
+            | LogLevel.Debug | LogLevel.Info ->
+                System.Console.WriteLine(le.ToString())
+            | _ -> System.Console.Error.WriteLine(le.ToString())
+            System.Console.ResetColor()
+        Logger("", print)
+        
+    /// A logger that prints to std::out / std::err based on the context, with extra colourization, using a short form
+    let ColorConsoleShort =
+        let print (le:LogEntry) =
+            System.Console.ResetColor()
+            System.Console.ForegroundColor <- levelToCol le.Level
+            match le.Level with
+            | LogLevel.Debug | LogLevel.Info ->
+                System.Console.WriteLine(le.ShortString)
+            | _ -> System.Console.Error.WriteLine(le.ShortString)
+            System.Console.ResetColor()
+        Logger("", print)
     
     /// Creates a new logger with the provided consumer
     let withConsumer newConsumer (logger : Logger) = Logger(logger.Path, newConsumer)
     
     /// Creates a new logger with the provided path
-    let withPath newPath (logger : Logger) = Logger(newPath, logger.Consumer)
+    let withPath (newPath:string) (logger : Logger) =
+        let path = newPath.Replace('\\','/')
+        Logger(path, logger.Consumer)
     
     /// Creates a new logger with the provided path appended. This is useful for heirarchical logger pathing.
-    let appendPath newPath (logger : Logger) = Logger(Path.Combine(logger.Path, newPath), logger.Consumer)
+    let appendPath newPath (logger : Logger) = 
+        let joinPath = Path.Combine(logger.Path, newPath).Replace('\\','/')
+        Logger(joinPath, logger.Consumer)
     
     /// Logs a message to the logger at the provided level.
     let inline logf level (logger : Logger) format = logger.Logf level format
