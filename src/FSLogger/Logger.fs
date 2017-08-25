@@ -61,7 +61,7 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
           .Append(']')
           .Append(path, idx + 1, max 0 (path.Length - 1 - idx))
           .Append(": ")
-          .AppendLine(message)
+          .Append(message)
           .ToString()
 
 /// Immmutable logger, which holds information about the logging context.
