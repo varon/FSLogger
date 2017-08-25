@@ -5,13 +5,13 @@ open System.Reflection
 [<assembly: AssemblyTitleAttribute("FSLogger")>]
 [<assembly: AssemblyProductAttribute("FSLogger")>]
 [<assembly: AssemblyDescriptionAttribute("F#ing simple logger for F#.")>]
-[<assembly: AssemblyVersionAttribute("1.3")>]
-[<assembly: AssemblyFileVersionAttribute("1.3")>]
+[<assembly: AssemblyVersionAttribute("2.0")>]
+[<assembly: AssemblyFileVersionAttribute("2.0")>]
 do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "FSLogger"
     let [<Literal>] AssemblyProduct = "FSLogger"
     let [<Literal>] AssemblyDescription = "F#ing simple logger for F#."
-    let [<Literal>] AssemblyVersion = "1.3"
-    let [<Literal>] AssemblyFileVersion = "1.3"
+    let [<Literal>] AssemblyVersion = "2.0"
+    let [<Literal>] AssemblyFileVersion = "2.0"
