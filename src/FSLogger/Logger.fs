@@ -52,6 +52,7 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
     
     override __.ToString() = sprintf "[%A|%A]%s :%s" time level path message
 
+    /// Retrieves a string representation of the long message using some default formatting. This is a more compact representation than ToString()
     member __.ShortString = 
         let sb = new StringBuilder(path.Length)
         let idx = path.LastIndexOfAny(separators, path.Length - 1)
