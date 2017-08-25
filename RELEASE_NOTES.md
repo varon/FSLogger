@@ -1,3 +1,6 @@
+### 2.2
+* Remove extra newline on end of ShortString
+
 ### 2.1
 * Fix broken ShortString
 * Add unit test for ShortString
