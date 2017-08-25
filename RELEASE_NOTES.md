@@ -1,3 +1,7 @@
+### 2.0.1
+* Fix broken ShortString
+* Add unit test for ShortString
+
 ### 2.0
 * Fixed path display to always use '/' separators
 * Added short forms
