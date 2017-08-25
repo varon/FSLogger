@@ -54,11 +54,11 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
 
     member __.ShortString = 
         let sb = new StringBuilder(path.Length)
-        let idx = path.LastIndexOfAny(separators,0, path.Length - 1)
+        let idx = path.LastIndexOfAny(separators, path.Length - 1)
         sb.Append('[')
-          .Append(time.ToShortTimeString())
+          .Append(time.ToLongTimeString())
           .Append(']')
-          .Append(path, idx + 1, (path.Length - idx))
+          .Append(path, idx + 1, max 0 (path.Length - 1 - idx))
           .Append(": ")
           .AppendLine(message)
           .ToString()
