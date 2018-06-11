@@ -10,10 +10,8 @@ This isn't frequently updated because it's literally perfect (well, probably, al
 ```fsharp
 open FSLogger
 let log = Logger.ColorConsole
-// log stuff to the information channel.
-log.I "Uzing da librariez"
-// log a warning (using the format string features)
-log.W "%d out of %d developers recommend FsLogger" 5 5
+log.I "Uzing da librariez" // log to info
+log.W "%d out of %d developers recommend FsLogger" 5 5 // log to warning with format features
 ```
 
 ## Is that it?
@@ -61,4 +59,4 @@ let log =
 
 ## I want more examples!
 
-Read the source code! It's super simple and documented.
+[Read the source code! It's super simple and documented.](https://github.com/varon/FSLogger/blob/master/src/FSLogger/Logger.fs)
