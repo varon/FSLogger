@@ -50,7 +50,7 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
     /// The actual log message
     member __.Message = message
     
-    override __.ToString() = sprintf "[%A|%A]%s :%s" time level path message
+    override __.ToString() = sprintf "[%A|%A]%s:%s" time level path message
 
     /// Retrieves a string representation of the long message using some default formatting. This is a more compact representation than ToString()
     member __.ShortString = 
