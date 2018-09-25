@@ -163,8 +163,11 @@ module Logger =
     
     /// Creates a new logger with the provided path appended. This is useful for heirarchical logger pathing.
     let appendPath newPath (logger : Logger) = 
-        let joinPath = Path.Combine(logger.Path, newPath).Replace('\\','/')
-        Logger(joinPath, logger.Consumer)
+        if String.IsNullOrEmpty logger.Path then
+            withPath newPath logger
+        else
+            let joinPath = Path.Combine(logger.Path, newPath).Replace('\\','/')
+            Logger(joinPath, logger.Consumer)
     
     /// Logs a message to the logger at the provided level.
     let inline logf level (logger : Logger) format = logger.Logf level format
