@@ -24,6 +24,7 @@ module FSLogger
 open System
 open System.IO
 open System.Text
+open System.Globalization
 
 type LogLevel = 
     | Debug = 0
@@ -56,8 +57,9 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
     member __.ShortString = 
         let sb = new StringBuilder(path.Length)
         let idx = path.LastIndexOfAny(separators, path.Length - 1)
+        let ts = DateTimeFormatInfo.CurrentInfo.LongTimePattern
         sb.Append('[')
-          .Append(time.ToLongTimeString())
+          .Append(time.ToString(ts))
           .Append(']')
           .Append(path, idx + 1, max 0 (path.Length - 1 - idx))
           .Append(": ")
