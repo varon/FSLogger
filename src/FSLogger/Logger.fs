@@ -66,6 +66,7 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
 
 /// Immmutable logger, which holds information about the logging context.
 [<Struct>]
+[<StructuredFormatDisplay("Logger: {path = path; consumer = consumer}")>]
 type Logger internal (path : string, consumer : LogEntry -> unit) = 
     
     /// The current path of this logger
