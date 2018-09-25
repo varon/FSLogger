@@ -1,3 +1,8 @@
+### 2.3
+* Added StructedFormatDisplay attribute
+* Adjusted default string representation
+* Improved appendPath function
+
 ### 2.2
 * Remove extra newline on end of ShortString
 
