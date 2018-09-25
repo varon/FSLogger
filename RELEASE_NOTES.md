@@ -1,3 +1,6 @@
+### 2.4
+* Added Xplat way to get a long time string
+
 ### 2.3
 * Added StructedFormatDisplay attribute
 * Adjusted default string representation
