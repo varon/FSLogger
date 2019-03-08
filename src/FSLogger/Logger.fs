@@ -1,6 +1,6 @@
 //The MIT License (MIT)
 //
-//Copyright (c) 2018
+//Copyright (c) 2019
 //
 //Permission is hereby granted, free of charge, to any person obtaining a copy
 //of this software and associated documentation files (the "Software"), to deal
@@ -127,7 +127,7 @@ module Logger =
     let private levelToCol l =
         match l with
         | LogLevel.Debug -> ConsoleColor.Gray
-        | LogLevel.Info -> ConsoleColor.White
+        | LogLevel.Info -> ConsoleColor.Green
         | LogLevel.Warn -> ConsoleColor.Yellow
         | LogLevel.Error -> ConsoleColor.Red
         | _ -> ConsoleColor.Magenta
