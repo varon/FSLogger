@@ -1,3 +1,6 @@
+### 2.5
+* Target net472
+
 ### 2.4
 * Added Xplat way to get a long time string
 
