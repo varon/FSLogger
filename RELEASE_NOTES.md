@@ -1,3 +1,7 @@
+### 3.0
+* Use format strings for `appendPath` and `withPath`
+* Logger module fixes
+
 ### 2.5
 * Target net472
 
