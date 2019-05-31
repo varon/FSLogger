@@ -9,6 +9,7 @@ NUGET
       xunit.extensibility.execution (>= 2.2 < 3.0)
     FSharp.Core (4.6.2)
     xunit.abstractions (2.0.3)
+    xunit.assert (2.4.1)
     xunit.core (2.4.1)
       xunit.extensibility.core (2.4.1)
       xunit.extensibility.execution (2.4.1)
