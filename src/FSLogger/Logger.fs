@@ -78,7 +78,7 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member __.Consumer = consumer
     
     /// Logs an unformatted message at the specified level
-    member private __.Log level message = 
+    member internal __.Log level message = 
         let logEntry = LogEntry(level, DateTime.Now, path, message)
         consumer logEntry
     
@@ -160,20 +160,20 @@ module Logger =
     let withConsumer newConsumer (logger : Logger) = Logger(logger.Path, newConsumer)
     
     /// Creates a new logger with the provided path
-    let withPath (newPath:string) (logger : Logger) =
-        let path = newPath.Replace('\\','/')
-        Logger(path, logger.Consumer)
+    /// This accepts a format string.
+    let withPath format =
+        Printf.ksprintf (fun path (logger:Logger) -> Logger(path.Replace('\\', '/'), logger.Consumer)) format
     
     /// Creates a new logger with the provided path appended. This is useful for heirarchical logger pathing.
-    let appendPath newPath (logger : Logger) = 
-        if String.IsNullOrEmpty logger.Path then
-            withPath newPath logger
-        else
-            let joinPath = Path.Combine(logger.Path, newPath).Replace('\\','/')
-            Logger(joinPath, logger.Consumer)
+    /// This accepts a format string.
+    let appendPath format =
+        Printf.ksprintf (fun path (logger : Logger) -> Logger(Path.Combine(logger.Path, path).Replace('\\', '/'), logger.Consumer)) format
     
     /// Logs a message to the logger at the provided level.
-    let inline logf level (logger : Logger) format = logger.Logf level format
+    /// This accepts a format string.
+    let logf level format =
+        Printf.ksprintf (fun msg (logger:Logger) -> logger.Log level msg) format
+         
     
     /// Adds a consumer to the logger, such that the new and current consumers are run.
     let addConsumer newConsumer (logger : Logger) = 
