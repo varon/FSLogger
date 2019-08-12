@@ -60,3 +60,14 @@ let ``Logger logf format string works``() =
     Assert.Equal("$5 test", msg)
 
 
+[<Fact>]
+let ``Default logger works for all methods without exn``() =
+    let l = Logger.Default
+    l.D "debug"
+    l.I "info"
+    l.W "warn"
+    l.E "error"
+    l.F "fun"
+    l.Consumer (new LogEntry(LogLevel.Debug, DateTime.UtcNow, "path", "ignored consumer"))
+
+
