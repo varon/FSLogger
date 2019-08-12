@@ -1,3 +1,7 @@
+### 3.1
+* Add fast-path optimization to loggers without a consumers.
+* Add API to remove consumers from the logger.
+
 ### 3.0
 * Use format strings for `appendPath` and `withPath`
 * Logger module fixes
