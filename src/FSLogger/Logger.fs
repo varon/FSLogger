@@ -75,36 +75,53 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member __.Path = path
     
     /// The current consumer for this logger
-    member __.Consumer = consumer
+    member __.Consumer =
+        if Object.ReferenceEquals(consumer, null) then
+            ignore
+        else
+            consumer
     
     /// Logs an unformatted message at the specified level
     member internal __.Log level message = 
-        let logEntry = LogEntry(level, DateTime.Now, path, message)
-        consumer logEntry
+        if not (Object.ReferenceEquals(consumer, null)) then
+            let logEntry = LogEntry(level, DateTime.Now, path, message)
+            consumer logEntry
     
     /// Logs the message at the specified level
-    member x.Logf level format = Printf.ksprintf (x.Log level) format
+    member x.Logf level format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log level) format
     
     /// Logs the message at the debug level
-    member x.D format = Printf.ksprintf (x.Log LogLevel.Debug) format
+    member x.D format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Debug) format
     
     /// Logs the message at the info level
-    member x.I format = Printf.ksprintf (x.Log LogLevel.Info) format
+    member x.I format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Info) format
     
     /// Logs the message at the warning level
-    member x.W format = Printf.ksprintf (x.Log LogLevel.Warn) format
+    member x.W format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Warn) format
     
     /// Logs the message at the error level
-    member x.E format = Printf.ksprintf (x.Log LogLevel.Error) format
+    member x.E format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Error) format
     
     /// Logs the message at the fatal level
-    member x.F format = Printf.ksprintf (x.Log LogLevel.Fatal) format
+    member x.F format = 
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Fatal) format
     
     override __.ToString() = sprintf "Logger: {path = '%s'; consumer = %A}" path consumer
 
 module Logger = 
     /// The default logger. Has no path and does nothing on consumption.
-    let Default = Logger("", ignore)
+    let Default = Logger("", Unchecked.defaultof<_>)
     
     /// A logger that prints to std::out / std::err based on the context
     let Console = 
