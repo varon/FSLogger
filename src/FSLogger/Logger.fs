@@ -200,6 +200,9 @@ module Logger =
             curConsumer l
             newConsumer l
         logger |> withConsumer consume
+        
+    /// Removes all consumers from the logger.
+    let removeConsumer (logger : Logger) = logger |> withConsumer Unchecked.defaultof<_>
     
     /// Creates a new logger with a mapping function over the log entries.
     let decorate f (logger : Logger) = Logger(logger.Path, f >> logger.Consumer)
