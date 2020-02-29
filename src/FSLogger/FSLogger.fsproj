@@ -34,11 +34,6 @@
     <DocumentationFile>.\bin\Release\FSLogger.xml</DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Logger.fs" />
-    <None Include="paket.references" />
-    <None Include="paket.template" />
-  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
