@@ -26,12 +26,14 @@ open System.IO
 open System.Text
 open System.Globalization
 
-type LogLevel = 
-    | Debug = 0
-    | Info = 1
-    | Warn = 2
-    | Error = 3
-    | Fatal = 4
+type LogLevel =
+    | Trace = 0
+    | Debug = 1
+    | Info = 2
+    | Notice = 3
+    | Warn = 4
+    | Error = 5
+    | Fatal = 6
 
 /// Immutable struct holding information relating to a log entry.
 [<Struct>]
@@ -91,7 +93,12 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member x.Logf level format =
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log level) format
-    
+            
+    /// Logs the message at the trace level
+    member x.T format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Trace) format
+            
     /// Logs the message at the debug level
     member x.D format =
         if not (Object.ReferenceEquals(consumer, null)) then
@@ -101,6 +108,11 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member x.I format =
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Info) format
+            
+    /// Logs the message at the Notice level
+    member x.N format =
+        if not (Object.ReferenceEquals(consumer, null)) then
+            Printf.ksprintf (x.Log LogLevel.Notice) format
     
     /// Logs the message at the warning level
     member x.W format =
