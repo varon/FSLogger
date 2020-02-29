@@ -2,7 +2,7 @@ module FSLogger.Tests
 
 open FSLogger
 open Xunit
-open FsCheck.Xunit
+open FsCheck
 open System
 
 
