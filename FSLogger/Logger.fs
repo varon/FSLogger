@@ -89,38 +89,31 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     
     /// Logs the message at the trace level
     member x.T format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Trace) format
+        Printf.ksprintf (x.Log LogLevel.Trace) format
             
     /// Logs the message at the debug level
     member x.D format = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Debug) format
+        Printf.ksprintf (x.Log LogLevel.Debug) format
     
     /// Logs the message at the info level
     member x.I format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Info) format
+        Printf.ksprintf (x.Log LogLevel.Info) format
             
     /// Logs the message at the Notice level
     member x.N format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Notice) format
+        Printf.ksprintf (x.Log LogLevel.Notice) format
             
     /// Logs the message at the warning level
     member x.W format = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Warn) format
+        Printf.ksprintf (x.Log LogLevel.Warn) format
     
     /// Logs the message at the error level
     member x.E format = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Error) format
+        Printf.ksprintf (x.Log LogLevel.Error) format
     
     /// Logs the message at the fatal level
     member x.F format = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Fatal) format
+        Printf.ksprintf (x.Log LogLevel.Fatal) format
     
     override __.ToString() = sprintf "Logger: {path = '%s'; consumer = %A}" path consumer
 
@@ -148,8 +141,10 @@ module Logger =
 
     let private levelToCol l =
         match l with
+        | LogLevel.Trace -> ConsoleColor.DarkGray
         | LogLevel.Debug -> ConsoleColor.Gray
         | LogLevel.Info -> ConsoleColor.Green
+        | LogLevel.Notice -> ConsoleColor.Blue
         | LogLevel.Warn -> ConsoleColor.Yellow
         | LogLevel.Error -> ConsoleColor.Red
         | _ -> ConsoleColor.Magenta
