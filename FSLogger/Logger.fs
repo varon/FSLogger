@@ -58,7 +58,7 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
 
     /// Retrieves a string representation of the long message using some default formatting. This is a more compact representation than ToString()
     member __.ShortString = 
-        let sb = new StringBuilder(path.Length)
+        let sb = StringBuilder(path.Length)
         let idx = path.LastIndexOfAny(separators, path.Length - 1)
         let ts = DateTimeFormatInfo.CurrentInfo.LongTimePattern
         sb.Append('[')
@@ -84,14 +84,14 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member internal __.Log level message = 
         let logEntry = LogEntry(level, DateTime.Now, path, message)
         consumer logEntry
-            
+             
+    member x.Logf level format = Printf.ksprintf (x.Log level) format
+    
     /// Logs the message at the trace level
     member x.T format =
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Trace) format
             
-    member x.Logf level format = Printf.ksprintf (x.Log level) format
-    
     /// Logs the message at the debug level
     member x.D format = 
         if not (Object.ReferenceEquals(consumer, null)) then
