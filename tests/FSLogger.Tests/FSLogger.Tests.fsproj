@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>FSLogger.test</RootNamespace>
+        <OutputType>Module</OutputType>
     </PropertyGroup>
 
     <ItemGroup>

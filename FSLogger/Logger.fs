@@ -19,6 +19,7 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
+
 module FSLogger
 
 open System
@@ -77,30 +78,22 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member __.Path = path
     
     /// The current consumer for this logger
-    member __.Consumer =
-        if Object.ReferenceEquals(consumer, null) then
-            ignore
-        else
-            consumer
+    member __.Consumer = consumer
     
     /// Logs an unformatted message at the specified level
     member internal __.Log level message = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            let logEntry = LogEntry(level, DateTime.Now, path, message)
-            consumer logEntry
-    
-    /// Logs the message at the specified level
-    member x.Logf level format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log level) format
+        let logEntry = LogEntry(level, DateTime.Now, path, message)
+        consumer logEntry
             
     /// Logs the message at the trace level
     member x.T format =
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Trace) format
             
+    member x.Logf level format = Printf.ksprintf (x.Log level) format
+    
     /// Logs the message at the debug level
-    member x.D format =
+    member x.D format = 
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Debug) format
     
@@ -113,14 +106,14 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member x.N format =
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Notice) format
-    
+            
     /// Logs the message at the warning level
-    member x.W format =
+    member x.W format = 
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Warn) format
     
     /// Logs the message at the error level
-    member x.E format =
+    member x.E format = 
         if not (Object.ReferenceEquals(consumer, null)) then
             Printf.ksprintf (x.Log LogLevel.Error) format
     
@@ -133,7 +126,7 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
 
 module Logger = 
     /// The default logger. Has no path and does nothing on consumption.
-    let Default = Logger("", Unchecked.defaultof<_>)
+    let Default = Logger("", ignore)
     
     /// A logger that prints to std::out / std::err based on the context
     let Console = 
