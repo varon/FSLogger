@@ -1,6 +1,7 @@
 ### 4.0
 * Added Trace and Notice levels
-* //TODO: Figure out what to write here
+* Move to netstandard
+* Fix breaking changes in 3.1
 
 ### 3.1
 * Add fast-path optimization to loggers without a consumers.

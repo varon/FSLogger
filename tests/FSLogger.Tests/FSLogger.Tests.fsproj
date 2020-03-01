@@ -14,11 +14,17 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="FsCheck" />
-      <PackageReference Include="FsCheck.Xunit" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-      <PackageReference Include="xunit" />
-      <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+        <PackageReference Include="FsCheck.Xunit" Version="2.14.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="xunit.abstractions" Version="2.0.3" />
+        <PackageReference Include="xunit.assert" Version="2.4.1" />
+        <PackageReference Include="xunit.core" Version="2.4.1" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
+        <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.console" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.msbuild" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     </ItemGroup>
 
     <ItemGroup>
