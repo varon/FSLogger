@@ -1,6 +1,6 @@
 ### 4.0
 * Added Trace and Notice levels
-* Move to netstandard
+* Move to netstandard 2.1
 * Fix breaking changes in 3.1
 
 ### 3.1
