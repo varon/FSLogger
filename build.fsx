@@ -1,5 +1,4 @@
 #load ".fake/build.fsx/intellisense.fsx"
-#load "docsTool/CLI.fs"
 #if !FAKE
 #r "Facades/netstandard"
 #r "netstandard"
@@ -41,8 +40,8 @@ let environVarAsBoolOrDefault varName defaultValue =
 // Metadata and Configuration
 //-----------------------------------------------------------------------------
 
-let productName = "MyCoolNewLib"
-let sln = "MyCoolNewLib.sln"
+let productName = "FSLogger"
+let sln = "FSLogger.sln"
 
 
 let srcCodeGlob =
@@ -64,15 +63,10 @@ let distDir = __SOURCE_DIRECTORY__  @@ "dist"
 let distGlob = distDir @@ "*.nupkg"
 
 let coverageThresholdPercent = 80
-let coverageReportDir =  __SOURCE_DIRECTORY__  @@ "docs" @@ "coverage"
 
 
-let docsDir = __SOURCE_DIRECTORY__  @@ "docs"
-let docsSrcDir = __SOURCE_DIRECTORY__  @@ "docsSrc"
-let docsToolDir = __SOURCE_DIRECTORY__ @@ "docsTool"
-
-let gitOwner = "MyGithubUsername"
-let gitRepoName = "MyCoolNewLib"
+let gitOwner = "Varon"
+let gitRepoName = "FSLogger"
 
 let gitHubRepoUrl = sprintf "https://github.com/%s/%s" gitOwner gitRepoName
 
@@ -80,18 +74,16 @@ let releaseBranch = "master"
 
 let tagFromVersionNumber versionNumber = sprintf "v%s" versionNumber
 
-let changelogFilename = "CHANGELOG.md"
+let changelogFilename = "RELEASE_NOTES.md"
 let changelog = Fake.Core.Changelog.load changelogFilename
 let mutable latestEntry =
     if Seq.isEmpty changelog.Entries
-    then Changelog.ChangelogEntry.New("0.0.1", "0.0.1-alpha.1", Some DateTime.Today, None, [], false)
+    then Changelog.ChangelogEntry.New("4.0.0", "4.0.0", Some DateTime.Today, None, [], false)
     else changelog.LatestEntry
 let mutable linkReferenceForLatestEntry = ""
 let mutable changelogBackupFilename = ""
 
 let publishUrl = "https://www.nuget.org"
-
-let docsSiteBaseUrl = sprintf "https://%s.github.io/%s" gitOwner gitRepoName
 
 let disableCodeCoverage = environVarAsBoolOrDefault "DISABLE_COVERAGE" false
 
@@ -210,62 +202,17 @@ module dotnet =
         DotNet.exec optionConfig (sprintf "%s" command) args
         |> failOnBadExitAndPrint
 
-    let reportgenerator optionConfig args =
-        tool optionConfig "reportgenerator" args
-
     let sourcelink optionConfig args =
         tool optionConfig "sourcelink" args
 
     let fcswatch optionConfig args =
         tool optionConfig "fcswatch" args
 
-open DocsTool.CLIArgs
-module DocsTool =
-    open Argu
-    let buildparser = ArgumentParser.Create<BuildArgs>(programName = "docstool")
-    let buildCLI () =
-        [
-            BuildArgs.SiteBaseUrl docsSiteBaseUrl
-            BuildArgs.ProjectGlob srcGlob
-            BuildArgs.DocsOutputDirectory docsDir
-            BuildArgs.DocsSourceDirectory docsSrcDir
-            BuildArgs.GitHubRepoUrl gitHubRepoUrl
-            BuildArgs.ProjectName gitRepoName
-            BuildArgs.ReleaseVersion latestEntry.NuGetVersion
-        ]
-        |> buildparser.PrintCommandLineArgumentsFlat
-
-    let build () =
-        dotnet.run (fun args ->
-            { args with WorkingDirectory = docsToolDir }
-        ) (sprintf " -- build %s" (buildCLI()))
-        |> failOnBadExitAndPrint
-
-    let watchparser = ArgumentParser.Create<WatchArgs>(programName = "docstool")
-    let watchCLI () =
-        [
-            WatchArgs.ProjectGlob srcGlob
-            WatchArgs.DocsSourceDirectory docsSrcDir
-            WatchArgs.GitHubRepoUrl gitHubRepoUrl
-            WatchArgs.ProjectName gitRepoName
-            WatchArgs.ReleaseVersion latestEntry.NuGetVersion
-        ]
-        |> watchparser.PrintCommandLineArgumentsFlat
-
-    let watch projectpath =
-        dotnet.watch (fun args ->
-           { args with WorkingDirectory = docsToolDir }
-        ) "run" (sprintf "-- watch %s" (watchCLI()))
-        |> failOnBadExitAndPrint
-
 //-----------------------------------------------------------------------------
 // Target Implementations
 //-----------------------------------------------------------------------------
 
 let clean _ =
-    ["bin"; "temp" ; distDir; coverageReportDir]
-    |> Shell.cleanDirs
-
     !! srcGlob
     ++ testsGlob
     |> Seq.collect(fun p ->
@@ -402,29 +349,6 @@ let dotnetTest ctx =
                 c.Common
                 |> DotNet.Options.withAdditionalArgs args
             }) sln
-
-let generateCoverageReport _ =
-    let coverageReports =
-        !!"tests/**/coverage.*.xml"
-        |> String.concat ";"
-    let sourceDirs =
-        !! srcGlob
-        |> Seq.map Path.getDirectory
-        |> String.concat ";"
-    let independentArgs =
-            [
-                sprintf "-reports:%s"  coverageReports
-                sprintf "-targetdir:%s" coverageReportDir
-                // Add source dir
-                sprintf "-sourcedirs:%s" sourceDirs
-                // Ignore Tests and if AltCover.Recorder.g sneaks in
-                sprintf "-assemblyfilters:\"%s\"" "-*.Tests;-AltCover.Recorder.g"
-                sprintf "-Reporttypes:%s" "Html"
-            ]
-    let args =
-        independentArgs
-        |> String.concat " "
-    dotnet.reportgenerator id args
 
 let watchTests _ =
     !! testsGlob
@@ -569,36 +493,6 @@ let formatCode _ =
         | _ -> ()
     )
 
-
-let buildDocs _ =
-    DocsTool.build ()
-
-let watchDocs _ =
-    let watchBuild () =
-        !! srcGlob
-        |> Seq.map(fun proj -> fun () ->
-            dotnet.watch
-                (fun opt ->
-                    opt |> DotNet.Options.withWorkingDirectory (IO.Path.GetDirectoryName proj))
-                "build"
-                ""
-            |> ignore
-        )
-        |> Seq.iter (invokeAsync >> Async.Catch >> Async.Ignore >> Async.Start)
-    watchBuild ()
-    DocsTool.watch ()
-
-let releaseDocs ctx =
-    isReleaseBranchCheck () // Docs changes don't need a full release to the library
-
-    Git.Staging.stageAll docsDir
-    Git.Commit.exec "" (sprintf "Documentation release of version %s" latestEntry.NuGetVersion)
-    if isRelease (ctx.Context.AllExecutingTargets) |> not then
-        // We only want to push if we're only calling "ReleaseDocs" target
-        // If we're calling "Release" target, we'll let the "GitRelease" target do the git push
-        Git.Branches.push ""
-
-
 //-----------------------------------------------------------------------------
 // Target Declaration
 //-----------------------------------------------------------------------------
@@ -610,7 +504,6 @@ Target.createBuildFailure "RevertChangelog" revertChangelog  // Do NOT put this 
 Target.createFinal "DeleteChangelogBackupFile" deleteChangelogBackupFile  // Do NOT put this in the dependency chain
 Target.create "DotnetBuild" dotnetBuild
 Target.create "DotnetTest" dotnetTest
-Target.create "GenerateCoverageReport" generateCoverageReport
 Target.create "WatchTests" watchTests
 Target.create "GenerateAssemblyInfo" generateAssemblyInfo
 Target.create "DotnetPack" dotnetPack
@@ -620,9 +513,6 @@ Target.create "GitRelease" gitRelease
 Target.create "GitHubRelease" githubRelease
 Target.create "FormatCode" formatCode
 Target.create "Release" ignore
-Target.create "BuildDocs" buildDocs
-Target.create "WatchDocs" watchDocs
-Target.create "ReleaseDocs" releaseDocs
 
 //-----------------------------------------------------------------------------
 // Target Dependencies
@@ -646,18 +536,9 @@ Target.create "ReleaseDocs" releaseDocs
 "UpdateChangelog" ?=> "GenerateAssemblyInfo"
 "UpdateChangelog" ==> "PublishToNuGet"
 
-"DotnetBuild" ==> "BuildDocs"
-"BuildDocs" ==> "ReleaseDocs"
-"BuildDocs" ?=> "PublishToNuget"
-"DotnetPack" ?=> "BuildDocs"
-"GenerateCoverageReport" ?=> "ReleaseDocs"
-
-"DotnetBuild" ==> "WatchDocs"
-
 "DotnetRestore"
     ==> "DotnetBuild"
     ==> "DotnetTest"
-    =?> ("GenerateCoverageReport", not disableCodeCoverage)
     ==> "DotnetPack"
     ==> "SourceLinkTest"
     ==> "PublishToNuGet"
