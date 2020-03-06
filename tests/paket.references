@@ -1,0 +1,7 @@
+FsCheck
+FsCheck.Xunit
+xunit.core
+xunit.abstractions
+xunit.extensibility.core
+xunit.extensibility.execution
+xunit.assert
