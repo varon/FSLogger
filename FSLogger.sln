@@ -11,6 +11,14 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSLogger", "src\FSLogger\FS
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSLogger.Tests", "tests\FSLogger.Tests.fsproj", "{921B454D-79BE-4529-A162-165080521865}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{76BE487B-62B3-431B-B634-24214E9B0900}"
+ProjectSection(SolutionItems) = preProject
+	build.fsx = build.fsx
+	LICENSE.md = LICENSE.md
+	README.md = README.md
+	RELEASE_NOTES.md = RELEASE_NOTES.md
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
