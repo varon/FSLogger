@@ -19,6 +19,7 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //THE SOFTWARE.
+
 module FSLogger
 
 open System
@@ -26,12 +27,14 @@ open System.IO
 open System.Text
 open System.Globalization
 
-type LogLevel = 
-    | Debug = 0
-    | Info = 1
-    | Warn = 2
-    | Error = 3
-    | Fatal = 4
+type LogLevel =
+    | Trace = 0
+    | Debug = 1
+    | Info = 2
+    | Notice = 3
+    | Warn = 4
+    | Error = 5
+    | Fatal = 6
 
 /// Immutable struct holding information relating to a log entry.
 [<Struct>]
@@ -55,7 +58,7 @@ type LogEntry(level : LogLevel, time : DateTime, path : string, message : string
 
     /// Retrieves a string representation of the long message using some default formatting. This is a more compact representation than ToString()
     member __.ShortString = 
-        let sb = new StringBuilder(path.Length)
+        let sb = StringBuilder(path.Length)
         let idx = path.LastIndexOfAny(separators, path.Length - 1)
         let ts = DateTimeFormatInfo.CurrentInfo.LongTimePattern
         sb.Append('[')
@@ -75,53 +78,48 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
     member __.Path = path
     
     /// The current consumer for this logger
-    member __.Consumer =
-        if Object.ReferenceEquals(consumer, null) then
-            ignore
-        else
-            consumer
+    member __.Consumer = consumer
     
     /// Logs an unformatted message at the specified level
     member internal __.Log level message = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            let logEntry = LogEntry(level, DateTime.Now, path, message)
-            consumer logEntry
+        let logEntry = LogEntry(level, DateTime.Now, path, message)
+        consumer logEntry
+             
+    member x.Logf level format = Printf.ksprintf (x.Log level) format
     
-    /// Logs the message at the specified level
-    member x.Logf level format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log level) format
-    
+    /// Logs the message at the trace level
+    member x.T format =
+        Printf.ksprintf (x.Log LogLevel.Trace) format
+            
     /// Logs the message at the debug level
-    member x.D format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Debug) format
+    member x.D format = 
+        Printf.ksprintf (x.Log LogLevel.Debug) format
     
     /// Logs the message at the info level
     member x.I format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Info) format
-    
+        Printf.ksprintf (x.Log LogLevel.Info) format
+            
+    /// Logs the message at the Notice level
+    member x.N format =
+        Printf.ksprintf (x.Log LogLevel.Notice) format
+            
     /// Logs the message at the warning level
-    member x.W format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Warn) format
+    member x.W format = 
+        Printf.ksprintf (x.Log LogLevel.Warn) format
     
     /// Logs the message at the error level
-    member x.E format =
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Error) format
+    member x.E format = 
+        Printf.ksprintf (x.Log LogLevel.Error) format
     
     /// Logs the message at the fatal level
     member x.F format = 
-        if not (Object.ReferenceEquals(consumer, null)) then
-            Printf.ksprintf (x.Log LogLevel.Fatal) format
+        Printf.ksprintf (x.Log LogLevel.Fatal) format
     
     override __.ToString() = sprintf "Logger: {path = '%s'; consumer = %A}" path consumer
 
 module Logger = 
     /// The default logger. Has no path and does nothing on consumption.
-    let Default = Logger("", Unchecked.defaultof<_>)
+    let Default = Logger("", ignore)
     
     /// A logger that prints to std::out / std::err based on the context
     let Console = 
@@ -143,8 +141,10 @@ module Logger =
 
     let private levelToCol l =
         match l with
+        | LogLevel.Trace -> ConsoleColor.DarkGray
         | LogLevel.Debug -> ConsoleColor.Gray
         | LogLevel.Info -> ConsoleColor.Green
+        | LogLevel.Notice -> ConsoleColor.Blue
         | LogLevel.Warn -> ConsoleColor.Yellow
         | LogLevel.Error -> ConsoleColor.Red
         | _ -> ConsoleColor.Magenta

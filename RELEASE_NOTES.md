@@ -1,3 +1,8 @@
+### 4.0
+* Added Trace and Notice levels
+* Move to netstandard 2.1
+* Fix breaking changes in 3.1
+
 ### 3.1
 * Add fast-path optimization to loggers without a consumers.
 * Add API to remove consumers from the logger.
