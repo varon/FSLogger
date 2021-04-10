@@ -15,10 +15,10 @@ let devCount = 5
 open FSLogger
 let log = Logger.ColorConsole
 log.I "Uzing da librariez" // log to info
-log.Nf "{%d out of %d developers recommend FsLogger" 5 5 // log to warning with format features
+log.Wf "{%d out of %d devz recommend FsLogger" 5 5 // log to warning with format features
 
-let brainSize = "yuge"
-log.N $"if you use this library, you have a ${brainSize} brain" // log to notice using 5.0-style interpolation
+let size = "best"
+log.N $"This is the ${descr} library" // log to notice using 5.0-style interpolation
 ```
 
 ## Is that it?
