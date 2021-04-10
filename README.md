@@ -8,10 +8,17 @@ This isn't frequently updated because it's literally perfect (well, probably, al
 ## HOW TO LOG STUFF:
 
 ```fsharp
+
+let smartDevCount = 5
+let devCount = 5
+
 open FSLogger
 let log = Logger.ColorConsole
 log.I "Uzing da librariez" // log to info
-log.W "%d out of %d developers recommend FsLogger" 5 5 // log to warning with format features
+log.Nf "{%d out of %d developers recommend FsLogger" 5 5 // log to warning with format features
+
+let brainSize = "yuge"
+log.N $"if you use this library, you have a ${brainSize} brain" // log to notice using 5.0-style interpolation
 ```
 
 ## Is that it?
@@ -35,7 +42,7 @@ module SeriousBusiness =
         // shadow with a better path
         let log =  log |> Logger.appendPath "doStuff"
         if aNumber > 5 then
-            log.W "Oh no, %d is bigger than 5!" aNumber
+            log.W $"Oh no, {aNumber} is bigger than 5!"
         // do something important
 		ignore aNumber
 ```
