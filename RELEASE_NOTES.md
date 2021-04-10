@@ -1,3 +1,10 @@
+### 5.0
+* Logging API now expects interpolated strings.
+* Old sprintf-style methods are available with a `f` suffix.
+* Documentation improvements
+* Cleanup + internal code improvements
+* Likely some performance gains.
+
 ### 4.0
 * Added Trace and Notice levels
 * Move to netstandard 2.1
