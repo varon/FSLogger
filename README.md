@@ -23,7 +23,9 @@ log.N $"This is the ${descr} library" // log to notice using 5.0-style interpola
 
 ## Is that it?
 
-Okay fine. The library can do a bunch of stuff.
+Okay fine. The library can do a bunch of stuff.  
+
+Also has some nice colour output by default.
 
 
 ## More examples

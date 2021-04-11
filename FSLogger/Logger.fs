@@ -174,7 +174,7 @@ module Logger =
         match l with
         | LogLevel.Trace -> ConsoleColor.DarkGray
         | LogLevel.Debug -> ConsoleColor.Gray
-        | LogLevel.Info -> ConsoleColor.White
+        | LogLevel.Info -> ConsoleColor.Green
         | LogLevel.Notice -> ConsoleColor.Blue
         | LogLevel.Warn -> ConsoleColor.Yellow
         | LogLevel.Error -> ConsoleColor.Red
