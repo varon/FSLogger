@@ -45,8 +45,8 @@ module SeriousBusiness =
         let log =  log |> Logger.appendPath "doStuff"
         if aNumber > 5 then
             log.W $"Oh no, {aNumber} is bigger than 5!"
-        // do something important
-		ignore aNumber
+            // do something important
+	    ignore aNumber
 ```
 
 
