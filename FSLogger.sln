@@ -2,12 +2,6 @@
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
-	ProjectSection(SolutionItems) = preProject
-		paket.dependencies = paket.dependencies
-		paket.lock = paket.lock
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60BC93-E09B-4E5F-9D85-95A519479D54}"
 	ProjectSection(SolutionItems) = preProject
 		build.fsx = build.fsx
@@ -17,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{BF60
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD-2B06-4030-9F0F-DC548F98E1C4}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSLogger", "FSLogger\FSLogger.fsproj", "{BAC4B308-775B-44DF-99B6-6D5F55126128}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSLogger", "src\FSLogger\FSLogger.fsproj", "{BAC4B308-775B-44DF-99B6-6D5F55126128}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSLogger.tests", "tests\FSLogger.tests\FSLogger.tests.fsproj", "{D366155D-A0A4-4B6E-9E10-DEA8CBE28E82}"
 EndProject
