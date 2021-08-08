@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>5.0.0</PackageVersion>
+        <PackageVersion>5.1.0</PackageVersion>
         <Title>FSLogger</Title>
         <Authors>Varon</Authors>
         <Description>F#ing simple logger for F#.</Description>
