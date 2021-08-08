@@ -1,3 +1,6 @@
+### 5.1.0
+* Move to .Net Standard 2.0
+
 ### 5.0
 * Logging API now expects interpolated strings.
 * Old sprintf-style methods are available with a `f` suffix.
