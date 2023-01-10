@@ -4,6 +4,8 @@ An rich, simple, and efficient purely functional micro logging library for F#.
 
 This isn't frequently updated because it's literally perfect (well, probably, almost).
 
+This is used in several production systems. It's great. It's perfect, and you should use it!
+
 
 ## HOW TO LOG STUFF:
 
