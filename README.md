@@ -7,6 +7,12 @@ This isn't frequently updated because it's literally perfect (well, probably, al
 This is used in several production systems. It's great. It's perfect, and you should use it!
 
 
+## Installation
+
+You can install it via NuGet. You should already know how to do that.
+This runs on .NET Core, 6.0, 7.0, etc. Go forth and use it.
+
+
 ## HOW TO LOG STUFF:
 
 ```fsharp
