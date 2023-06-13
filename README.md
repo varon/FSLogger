@@ -23,7 +23,7 @@ let devCount = 5
 open FSLogger
 let log = Logger.ColorConsole
 log.I "Uzing da librariez" // log to info
-log.Wf "{%d out of %d devz recommend FsLogger" 5 5 // log to warning with format features
+log.Wf "%d out of %d devz recommend FsLogger" 5 5 // log to warning with format features
 
 let descr = "best"
 log.N $"This is the ${descr} library" // log to notice using 5.0-style interpolation
