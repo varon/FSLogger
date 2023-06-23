@@ -6,6 +6,9 @@ This isn't frequently updated because it's literally perfect (well, probably, al
 
 This is used in several production systems. It's great. It's perfect, and you should use it!
 
+## Is this any good?
+
+Yes and you should use it.
 
 ## Installation
 
