@@ -45,7 +45,7 @@ type LogLevel =
 
 /// Immutable struct holding information relating to a log entry.
 [<Struct>]
-type LogEntry(level : LogLevel, time : DateTime, path : string, message : string) =
+type LogEntry(level : LogLevel, time : DateTimeOffset, path : string, message : string) =
 
     static let separators = [| '\\'; '/' |]
 
@@ -89,7 +89,7 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
 
     /// Logs an unformatted message at the specified level
     member _.Log level message =
-        let logEntry = LogEntry(level, DateTime.Now, path, message)
+        let logEntry = LogEntry(level, DateTimeOffset.Now, path, message)
         consumer logEntry
 
 
