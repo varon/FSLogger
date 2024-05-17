@@ -45,7 +45,7 @@ type LogLevel =
 
 /// Immutable struct holding information relating to a log entry.
 [<Struct>]
-type LogEntry(level : LogLevel, time : DateTime, path : string, message : string) =
+type LogEntry(level : LogLevel, time : DateTimeOffset, path : string, message : string) =
 
     static let separators = [| '\\'; '/' |]
 
@@ -89,36 +89,10 @@ type Logger internal (path : string, consumer : LogEntry -> unit) =
 
     /// Logs an unformatted message at the specified level
     member _.Log level message =
-        let logEntry = LogEntry(level, DateTime.Now, path, message)
+        let logEntry = LogEntry(level, DateTimeOffset.Now, path, message)
         consumer logEntry
 
-    member x.Logf level format = Printf.ksprintf (x.Log level) format
 
-    // ---------------------
-    // FORMAT METHODS
-    // ---------------------
-    
-    /// Logs a format string at the trace level. This is the lowest log level.
-    member x.Tf format = Printf.ksprintf (x.Log LogLevel.Trace) format
-
-    /// Logs a format string at the debug level. This is higher than trace and lower than info.
-    member x.Df format = Printf.ksprintf (x.Log LogLevel.Debug) format
-
-    /// Logs a format string at the info level. This is higher than debug and lower than notice.
-    member x.If format = Printf.ksprintf (x.Log LogLevel.Info) format
-
-    /// Logs a format string at the notice level. This is higher than info and lower than warn.
-    member x.Nf format = Printf.ksprintf (x.Log LogLevel.Notice) format
-
-    /// Logs a format string at the warning level. This is higher than notice and lower than error.
-    member x.Wf format = Printf.ksprintf (x.Log LogLevel.Warn) format
-
-    /// Logs a format string at the error level. This is higher than warn and lower than fatal.
-    member x.Ef format = Printf.ksprintf (x.Log LogLevel.Error) format
-
-    /// Logs a format string at the fatal level. This is the highest log level.
-    member x.Ff format = Printf.ksprintf (x.Log LogLevel.Fatal) format
-        
     // ---------------------
     // INTERPOLATION METHODS
     // ---------------------
@@ -242,3 +216,7 @@ module Logger =
     let indent : Logger -> Logger =
         let indentF (l : LogEntry) = LogEntry(l.Level, l.Time, l.Path, $"    {l.Message}")
         decorate indentF
+
+
+
+// 

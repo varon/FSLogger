@@ -1,3 +1,7 @@
+### 6.0
+* Removed legacy format methods
+* Refactored timestamp to use DateTimeOffset for improved accuracy and consistency.
+
 ### 5.1.0
 * Move to .Net Standard 2.0
 
