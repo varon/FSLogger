@@ -3,17 +3,21 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>5.1.0</PackageVersion>
+        <PackageVersion>6.0</PackageVersion>
         <Title>FSLogger</Title>
         <Authors>Varon</Authors>
         <Description>F#ing simple logger for F#.</Description>
-        <Copyright> © Varon 2021</Copyright>
+        <Copyright> © Varon 2024</Copyright>
         <PackageProjectUrl>https://github.com/varon/FSLogger/</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/varon/FSLogger/blob/master/LICENSE.txt</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/varon/FSLogger/</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>logging F# </PackageTags>
         <PackageReleaseNotes>
+### 6.0
+* Removed legacy format methods
+* Refactored timestamp to use DateTimeOffset for improved accuracy and consistency.
+          
 ### 5.1.0
 * Move to .Net Standard 2.0
 
