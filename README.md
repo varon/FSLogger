@@ -10,6 +10,10 @@ This is used in several production systems. It's great. It's perfect, and you sh
 
 Yes and you should use it.
 
+## Is this still maintained?
+
+Yes, as of 2024 - we're just mostly feature complete here. How complicated could logging be anyway?
+
 ## Installation
 
 You can install it via NuGet. You should already know how to do that.
