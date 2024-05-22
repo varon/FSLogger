@@ -88,9 +88,7 @@
       <DebugSymbols>true</DebugSymbols>
       <DocumentationFile>bin\Release\FSLogger.xml</DocumentationFile>
     </PropertyGroup>
-
     <ItemGroup>
       <Compile Include="Logger.fs" />
     </ItemGroup>
-
 </Project>
