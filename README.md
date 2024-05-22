@@ -17,7 +17,7 @@ Yes, as of 2024 - we're just mostly feature complete here. How complicated could
 ## Installation
 
 You can install it via NuGet. You should already know how to do that.
-This runs on .NET Core, 6.0, 7.0, etc. Go forth and use it.
+This runs on .NET Core, 6.0, 7.0, 8.0, etc. Go forth and use it.
 
 
 ## HOW TO LOG STUFF:

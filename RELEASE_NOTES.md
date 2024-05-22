@@ -1,4 +1,7 @@
-### 6.0
+### 6.0.1
+* Add .NET 8 specific build
+
+### 6.0.0
 * Removed legacy format methods
 * Refactored timestamp to use DateTimeOffset for improved accuracy and consistency.
 
